@@ -44,6 +44,8 @@ where
             Err(_) => Message::KeepAlive,
         };
 
+        log::trace!("sending {:?}", &message);
+
         time::timeout(
             net::MESSAGE_TIMEOUT,
             net::write_message(&mut stream, &message),
@@ -148,7 +150,9 @@ async fn run(
 
                     clients.remove(idx);
                     current = 0;
-                }
+                };
+
+                log::trace!("writing: {:?}", &event);
 
                 manager.write(event).await?;
             }
